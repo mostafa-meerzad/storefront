@@ -1,0 +1,25 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+env/
+
+# Django migrations
+**/migrations/
+
+# Database files
+db.sqlite3
+
+# Logs and temp files
+*.log
+*.sqlite3
+
+# Ignore secret files
+.env
+.settings_local.py
+
+# Ignore static and media files (if stored locally)
+staticfiles/
+media/
