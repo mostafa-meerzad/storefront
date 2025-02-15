@@ -216,7 +216,6 @@ INSTALLED_APPS = [
 
 A Django app consists of multiple components:
 
-
 ### **(a) Views (`views.py`)**
 
 Views handle requests and return responses, typically rendering HTML templates or JSON responses.
@@ -229,5 +228,55 @@ from django.http import HttpResponse
 
 def home(request):
     return HttpResponse("Hello, Django!")
+
+def say_hello(request):
+    return HttpResponse("Hello World")
 ```
 
+---
+
+### **(b) URL Configuration (`urls.py`)**
+
+let's say in our `storefront` project whenever the url `localhost:8000/playground/hello` is requested the view function should be called and "Hello World" should be displayed to the user.
+
+Each app can have its own `urls.py`, which maps URLs to views.
+
+now create a `url.py` file in your app `playground` directory
+
+Example:
+
+```python
+from django.urls import path #import path function
+from . import views #import views module so we can reference our view function
+
+# now set a special variable that Django listens for "name is important" all in lowercase
+# it is a list of pattern objects
+# use th path function to create a url-pattern object
+# what we have here is basically called a url-configuration object
+urlpatterns = [
+
+    path('url/path', views.your_view_handler),
+    path('playground/hello', views.say_hello) # for our app
+]
+```
+
+Now, include this app’s URLs in the project’s main `urls.py`:
+
+in the "urls.py" module the instruction for adding another url-pattern is already provided
+
+```python
+from django.contrib import admin
+from django.urls import include, path
+# import "include" function so we can use our url pattern from our app
+#
+# "playground/" means any url that starts with "playground" will be handled by this "playground" app
+# Django chops off the first part of the url "playground/hello" and sends the "hello" to the url-configuration-module in "playground" app
+# this way there is no need to have the full url path in the url-configuration-module
+
+# every route must end wit "/"!
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('playground/', include("playground.urls")),
+    path('pathName/', include('your_app.urls')),  # Including app's URLs
+]
+```
