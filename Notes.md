@@ -335,3 +335,108 @@ def say_hello(request):
 
 ```
 
+---
+
+### **(d) Models (`models.py`)**
+
+Django models define the structure of your database tables. They are Python classes that map to database tables using Django’s ORM (Object-Relational Mapping).
+
+Example:
+
+```python
+from django.db import models
+
+class Product(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+```
+
+To apply this model to the database, run:
+
+```sh
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### **(e) Static Files (`static/`)**
+
+Django apps can include CSS, JavaScript, and images inside a `static/` directory.
+
+Example:
+Store a CSS file at `my_app/static/style.css` and use it in templates:
+
+```html
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}" />
+```
+
+Make sure to configure `STATIC_URL` in `settings.py`:
+
+```python
+STATIC_URL = '/static/'
+```
+
+---
+
+## **4. Why Use Multiple Apps?**
+
+A Django project can be broken down into multiple apps, each handling a different responsibility.  
+For example, in an **e-commerce project**, you might have:
+
+- `users` app → Handles authentication and user profiles.
+- `products` app → Manages product listings and categories.
+- `orders` app → Handles customer orders and payments.
+
+This modular approach makes development, maintenance, and code reusability easier.
+
+---
+
+## **5. Reusing Django Apps**
+
+One of Django's strengths is that apps can be reused in different projects. To do this:
+
+- Keep the app self-contained.
+- Use Django’s app configuration (`apps.py`) to make it portable.
+- Avoid hardcoding project-specific settings.
+
+For example, a **blog app** can be used in multiple projects simply by installing it and including its URLs.
+
+---
+
+## **6. Best Practices for Django Apps**
+
+- Keep each app focused on a **single responsibility**.
+- Organize templates inside the app (e.g., `my_app/templates/my_app/home.html`).
+- Use Django’s **app configuration** in `apps.py` for better structure.
+- Avoid **circular dependencies** by carefully structuring imports.
+- Write **tests** for your app in `tests.py` to ensure functionality.
+
+---
+
+## **7. Common Mistakes When Working with Django Apps**
+
+1. **Not Registering the App in `INSTALLED_APPS`**
+
+   - If you forget to add the app to `settings.py`, migrations won’t work.
+
+2. **Misplacing Templates and Static Files**
+
+   - Make sure templates are inside `templates/my_app/` to avoid conflicts.
+
+3. **Forgetting to Include URLs in the Project’s `urls.py`**
+
+   - Apps need to be linked in the main `urls.py` for their views to be accessible.
+
+4. **Circular Imports in Models or Views**
+   - If two models import each other, use `from app_name import models` instead.
+
+---
+
+## **Conclusion**
+
+A Django app is a modular component that encapsulates specific functionality within a project. By using multiple apps, developers can build scalable, maintainable, and reusable web applications. Each app consists of models, views, templates, static files, and other configurations, making it an independent and self-contained unit.
+
+Would you like me to explain anything in more detail or provide a practical example? 🚀
