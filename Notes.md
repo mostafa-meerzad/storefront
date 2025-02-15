@@ -1,9 +1,11 @@
 **Django: A High-Level Python Web Framework**
 
-### What is Django?
+# What is Django?
+
 Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It follows the **Model-View-Template (MVT)** architectural pattern and comes with a wide range of built-in features, reducing the need for third-party libraries.
 
-### Why Use Django?
+## Why Use Django?
+
 1. **Batteries-Included** – Django provides built-in features like authentication, ORM (Object-Relational Mapping), an admin panel, form handling, and more.
 2. **Security** – It helps developers avoid common security pitfalls like SQL injection, cross-site scripting (XSS), and cross-site request forgery (CSRF).
 3. **Scalability** – Django is used by major websites like Instagram and Disqus, proving its ability to handle high traffic.
@@ -15,22 +17,31 @@ Django is a high-level Python web framework that encourages rapid development an
 ## Getting Started with Django
 
 ### Installing Django
+
 To install Django, ensure you have Python installed. Then, use pip to install Django:
+
 ```bash
-pip install django
+pipenv install django
 ```
 
 You can verify the installation by running:
+
 ```bash
 django-admin --version
 ```
 
 ### Creating a Django Project
+
 To start a new Django project, use the following command:
+
 ```bash
 django-admin startproject project_name
 ```
+
+if you are already inside a directory and want to start your Django app init, don't specify the `project_name` instead provide `./`
+
 This will create a directory structure like this:
+
 ```
 project_name/
     manage.py
@@ -41,16 +52,20 @@ project_name/
         asgi.py
         wsgi.py
 ```
+
 - **manage.py** – A command-line utility for managing the project.
 - **settings.py** – Stores configuration settings.
 - **urls.py** – Handles URL routing.
 - **wsgi.py/asgi.py** – Entry points for WSGI/ASGI servers.
 
 ### Running the Development Server
+
 Navigate into your project directory and run:
+
 ```bash
 python manage.py runserver
 ```
+
 By default, this starts a local server at `http://127.0.0.1:8000/`.
 
 ---
@@ -58,11 +73,41 @@ By default, this starts a local server at `http://127.0.0.1:8000/`.
 ## Django Basics
 
 ### Creating an App
-A Django project consists of multiple apps. To create an app, run:
+
+A Django project consists of multiple apps.
+each app provides certain functionality just like your smartphone with apps each one providing a specific functionality.
+
+you can find all the installed apps in the `yourProjectName/settings.py` path e.x: `storefront/settings.py`
+
+```python
+
+# Application definition
+
+INSTALLED_APPS = [
+    'django.contrib.admin', gives us an admin interface for managing our data
+    'django.contrib.auth', used for authenticating users
+    'django.contrib.contenttypes', will come soon in the course
+    'django.contrib.sessions', kinda legacy and not used in newer versions of django projects
+    'django.contrib.messages', for displaying one time notifications to the users
+    'django.contrib.staticfiles', for serving static assets like iamges, icons
+]
+
+```
+
+To create an app, run:
+
 ```bash
 python manage.py startapp app_name
 ```
+
+for our `storefront` project just run `python manage.py startapp playground` in the terminal
+
+```bash
+python manage.py startapp app_name
+```
+
 This generates the following structure:
+
 ```
 app_name/
     migrations/
@@ -73,61 +118,96 @@ app_name/
     tests.py
     views.py
 ```
+
 - **models.py** – Defines database models.
 - **views.py** – Handles request/response logic.
 - **admin.py** – Configures the admin interface.
 
-### Defining Models
-A model represents a table in the database. Example:
+then we need to register our newly created app to the `projectName/settings.py` in `INSTALLED_APPS` list
+
 ```python
-from django.db import models
 
-class Movie(models.Model):
-    title = models.CharField(max_length=255)
-    release_year = models.IntegerField()
-    genre = models.CharField(max_length=100)
-    
-    def __str__(self):
-        return self.title
-```
-After defining models, run:
-```bash
-python manage.py makemigrations
-python manage.py migrate
-```
-
-### Registering Models in Admin
-To manage models via the Django admin panel, register them in `admin.py`:
-```python
-from django.contrib import admin
-from .models import Movie
-
-admin.site.register(Movie)
-```
-Then, create a superuser to access the admin panel:
-```bash
-python manage.py createsuperuser
-```
-
-### Views and URL Routing
-A simple view function:
-```python
-from django.http import HttpResponse
-
-def home(request):
-    return HttpResponse("Hello, Django!")
-```
-Add the route in `urls.py`:
-```python
-from django.urls import path
-from . import views
-
-urlpatterns = [
-    path('', views.home),
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'playground'
 ]
 ```
-Now, visiting `http://127.0.0.1:8000/` will display "Hello, Django!"
+
+### What is an App in Django?
+
+In Django, an **app** is a self-contained module that handles a specific function or feature of a larger web application. Apps are designed to be reusable and modular, allowing developers to build complex web applications by combining multiple apps.
+
+A Django **project** is the entire web application, which can contain multiple **apps**. Each app has its own models, views, templates, static files, and other logic, making it an independent component that can be plugged into different projects.
 
 ---
-This covers the foundational concepts of Django. Next, we can dive into templates, forms, authentication, and more!
 
+## **1. Understanding the Django App Structure**
+
+When you create an app using the `startapp` command, Django generates a directory with a predefined structure:
+
+```plaintext
+my_project/
+│
+├── my_app/  # This is the app
+│   ├── migrations/  # Database migration files
+│   │   ├── __init__.py
+│   ├── __init__.py  # Marks this directory as a Python package
+│   ├── admin.py  # Configuration for the Django Admin panel
+│   ├── apps.py  # App configuration
+│   ├── models.py  # Database models
+│   ├── tests.py  # Unit tests
+│   ├── views.py  # Application logic (controllers)
+│   ├── urls.py  # URL routing for the app
+│   ├── templates/  # HTML templates (optional)
+│   ├── static/  # Static files (CSS, JS, images)
+```
+
+Each of these files serves a specific purpose in the app's functionality.
+
+---
+
+## **2. How to Create an App in Django?**
+
+To create an app inside a Django project, follow these steps:
+
+### **Step 1: Navigate to the Django Project**
+
+First, make sure you are inside your Django project directory. If you don’t have a project yet, create one:
+
+```sh
+django-admin startproject my_project
+cd my_project
+```
+
+### **Step 2: Create a New App**
+
+Run the following command:
+
+```sh
+python manage.py startapp my_app
+```
+
+This will create a directory named `my_app` with the structure mentioned earlier.
+
+### **Step 3: Register the App in `settings.py`**
+
+Open `my_project/settings.py` and add the app to the `INSTALLED_APPS` list:
+
+```python
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'my_app',  # Registering the new app
+]
+```
+
+---
