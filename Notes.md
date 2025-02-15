@@ -211,3 +211,23 @@ INSTALLED_APPS = [
 ```
 
 ---
+
+## **3. Components of a Django App**
+
+A Django app consists of multiple components:
+
+
+### **(a) Views (`views.py`)**
+
+Views handle requests and return responses, typically rendering HTML templates or JSON responses.
+
+Example:
+
+```python
+from django.shortcuts import render
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Hello, Django!")
+```
+
