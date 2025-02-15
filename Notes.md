@@ -280,3 +280,58 @@ urlpatterns = [
     path('pathName/', include('your_app.urls')),  # Including app's URLs
 ]
 ```
+
+---
+
+### **(c) Templates (`templates/`)**
+
+Django uses the template system to render HTML files dynamically.
+
+Example:
+Create a file `my_app/templates/home.html`:
+
+for our project `playground/templates/hello.html`
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home</title>
+  </head>
+  <body>
+    <h1>Welcome to Django!</h1>
+  </body>
+</html>
+```
+
+or
+
+```html
+<!-- in the template you can have logic or render data dynamically -->
+{% if name %}
+<!-- name is dynamic and provided in the views module render method  -->
+<h1>Hello {{ name }}</h1>
+
+{% else %}
+<h1>Hello World</h1>
+
+{% endif %}
+```
+
+Modify the view to use the template:
+
+```python
+def home(request):
+    return render(request, 'home.html')
+```
+
+or
+
+```python
+def say_hello(request):
+    # return HttpResponse("Hello World")
+    # return render(request, "hello.html") # render template with no dynamic data provided
+    return render(request, "hello.html", {"name": "Mostafa"}) # name is provided as dynamic data
+
+```
+
