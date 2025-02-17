@@ -1,9 +1,19 @@
-<!-- in the template you can have logic or render data dynamically -->
-{% if name %}
-<!-- name is dynamic and provided in the views module render method  -->
-<h1>Hello {{ name }}</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- in the template you can have logic or render data dynamically -->
+    {% if name %}
+    <!-- name is dynamic and provided in the views module render method  -->
+    <h1>Hello {{ name }}</h1>
 
-{% else %}
-<h1>Hello World</h1>
+    {% else %}
+    <h1>Hello World</h1>
 
-{% endif %}
+    {% endif %}
+  </body>
+</html>

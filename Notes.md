@@ -456,3 +456,9 @@ in your code set break-points and then run debugger `F5` in VScode, when your br
 As a best practice remove your break-points after you're done with debugging
 
 in VScode you can run your project for example Our Django project without running the `python manage.py runserver` by just using Run Without Debug from the Run menu or `Ctr + F5`.
+
+## Debug Django Apps using Django-Debug-Toolbar
+
+[Django-Debug-Toolbar](https://django-debug-toolbar.readthedocs.io/en/latest/installation.html)
+
+just follow the instructions
