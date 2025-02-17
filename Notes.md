@@ -1,5 +1,3 @@
-**Django: A High-Level Python Web Framework**
-
 # What is Django?
 
 Django is a high-level Python web framework that encourages rapid development and clean, pragmatic design. It follows the **Model-View-Template (MVT)** architectural pattern and comes with a wide range of built-in features, reducing the need for third-party libraries.
@@ -440,3 +438,21 @@ For example, a **blog app** can be used in multiple projects simply by installin
 A Django app is a modular component that encapsulates specific functionality within a project. By using multiple apps, developers can build scalable, maintainable, and reusable web applications. Each app consists of models, views, templates, static files, and other configurations, making it an independent and self-contained unit.
 
 Would you like me to explain anything in more detail or provide a practical example? 🚀
+
+## Debugging Django Apps in VScode
+
+Open VScode click the Debug icon, then create a `launch.json` file from the suggested menu select `Python Debugger` then from the second menu select `Django App` and finally select the path to `manage.py` from your main project directory.
+
+To make sure our debugger doesn't conflict with our app server on port:8000.
+
+in the `args` array add a port number like `9000` as a string
+
+```json
+ "args": ["runserver", "9000"],
+```
+
+in your code set break-points and then run debugger `F5` in VScode, when your break-points arrive code execution stops and from there on you can execute your code line by line.
+
+As a best practice remove your break-points after you're done with debugging
+
+in VScode you can run your project for example Our Django project without running the `python manage.py runserver` by just using Run Without Debug from the Run menu or `Ctr + F5`.
