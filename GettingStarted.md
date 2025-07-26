@@ -186,3 +186,156 @@ def say_hello(request):
 ```
 
 now we need to map this view to a url, so when we get a request to that url this function will be called.
+
+## Mapping URLs to View
+
+Let's say whenever we send a request to `http://127.0.0.1:8000/playground/hello` our view function should be called and return `Hello World` to the user.
+
+1. in your app folder `playground` in our case. crate a `urls.py` file, here we map our URLs to our View functions.
+
+```py
+from django.urls import path
+from . import views
+
+# make a special variable, all lowercase "urlpatterns"
+
+# this is called a URLConf "url configuration"
+urlpatterns = [
+    # use the path function to crate a url-pattern object "path(route, view)"
+  path("playground/hello/", views.say_hello)
+]
+```
+
+now this file is a url-configuration module, then we need to import this urlConfig to our main urlConfig module `storefront` the core of our django application.
+
+2. in the main `urls.py` file, first we need to import `include` function as there is comments for it. then add the path for your view.
+
+`path("app_name/", include("app_name.urls"))`, in our case `path("playground/", include("playground.urls"))`
+
+---
+
+### playground app url
+
+```py
+from django.urls import path
+from . import views
+
+# make a special variable
+# this is called a URLConf "url configuration"
+urlpatterns = [
+  path("playground/hello/", views.say_hello)
+]
+```
+
+### main urls
+
+```py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path("playground/", include("playground.urls"))
+]
+```
+
+with our **playground** urlConf in our main urls file we can remove the `playground` from the beginning of the views in our **playground** app. because django knows that urls starting with `playground` is handled by `playground.urls`, it chops off the first part of urls like this "playground/hello" to "hello" and this is passed to the view functions of playground app.
+
+```py
+from django.urls import path
+from . import views
+
+# make a special variable
+
+# this is called a URLConf "url configuration"
+urlpatterns = [
+  path("hello/", views.say_hello)
+]
+```
+
+---
+
+in other words
+
+Perfect! Now you're moving into **URL routing**, which is what tells Django **"when a user visits this URL, run this view."**
+
+Let’s break it down with a clear step-by-step example 👇
+
+---
+
+### ✅ Step-by-Step: Mapping Views to URLs
+
+#### 1. **Create a View**
+
+In your app's `views.py`:
+
+```python
+# views.py
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Welcome to my Django app, Mostafa!")
+```
+
+---
+
+#### 2. **Create a URL pattern in your app**
+
+In your app folder (e.g., `myapp/urls.py`), create this file if it doesn’t exist:
+
+```python
+# myapp/urls.py
+from django.urls import path
+from . import views  # Import your views file
+
+urlpatterns = [
+    path('', views.home, name='home'),  # '' = root of the app
+]
+```
+
+---
+
+#### 3. **Include your app's URLs in the main project**
+
+In your **project's** main `urls.py` (usually in a folder named same as the project):
+
+```python
+# project_name/urls.py
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('myapp.urls')),  # include app’s urls
+]
+```
+
+This means:
+
+- When someone visits `http://localhost:8000/`, Django looks at `myapp/urls.py`
+- Then it runs the `home()` view because `''` matches the root
+
+---
+
+### 📌 Bonus: Add More Views
+
+```python
+# views.py
+def about(request):
+    return HttpResponse("This is the About page.")
+```
+
+```python
+# myapp/urls.py
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('about/', views.about, name='about'),
+]
+```
+
+Now:
+
+- `/` → Home page
+- `/about/` → About page
+
+---
