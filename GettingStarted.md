@@ -486,3 +486,128 @@ But if you ever build:
   Templates are still **super useful** — especially for internal tools or quick MVPs.
 
 ---
+
+## Set Up vscode debugger tool so you can easily start your project in normal or debug mode
+
+## install Django Debug Toolbar
+
+Great final lesson for the day, Mostafa! 🧠🧰
+
+You're right — the **Django Debug Toolbar** has changed a bit since Mosh recorded the course. Let me walk you through the **updated and correct way** to install it in 2025:
+
+---
+
+## ✅ What is Django Debug Toolbar?
+
+It's a **powerful debugging tool** that shows:
+
+- SQL queries
+- Templates used
+- Cache info
+- Middleware
+- Request/response headers
+- and much more — all in your browser sidebar!
+
+Perfect for development.
+
+---
+
+## 🚀 Updated Steps to Install Django Debug Toolbar
+
+### 🔹 1. Install it via pip
+
+Run this in your terminal:
+
+```bash
+pip install django-debug-toolbar
+```
+
+---
+
+### 🔹 2. Add to `INSTALLED_APPS`
+
+In your `settings.py`:
+
+```python
+INSTALLED_APPS = [
+    ...
+    "debug_toolbar",
+]
+```
+
+---
+
+### 🔹 3. Add Middleware
+
+Still in `settings.py`:
+
+```python
+MIDDLEWARE = [
+    ...
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+]
+```
+
+Make sure it's near the **top of the list**, ideally right after Django’s `CommonMiddleware`.
+
+---
+
+### 🔹 4. Configure Internal IPs (optional but required for local dev)
+
+Still in `settings.py`, add this line:
+
+```python
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+```
+
+---
+
+### 🔹 5. Include Debug Toolbar URLs
+
+In your **main `urls.py`** (project-level, not app-level):
+
+```python
+from django.conf import settings
+from django.conf.urls.static import static
+from django.urls import include, path
+
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    ...
+]
+
+# Only show toolbar in development
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += [
+        path("__debug__/", include(debug_toolbar.urls)),
+    ]
+```
+
+---
+
+### ✅ Now Run It
+
+Make sure you're in **DEBUG mode** in `settings.py`:
+
+```python
+DEBUG = True
+```
+
+Then run your server:
+
+```bash
+python manage.py runserver
+```
+
+Go to `http://127.0.0.1:8000/`, and you should see the toolbar on the right side of the page!
+
+---
+
+### 🧼 Tip: Hide in Production
+
+The toolbar should only be enabled when `DEBUG = True`. Never use it in production!
+
+---
