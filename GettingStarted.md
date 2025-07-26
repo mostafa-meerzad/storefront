@@ -127,3 +127,62 @@ INSTALLED_APPS = [
     "playground"
 ]
 ```
+
+## Views
+
+### ✅ What are Views in Django?
+
+**Views** in Django are **Python functions or classes** that handle **incoming HTTP requests** and return **HTTP responses** (like HTML, JSON, etc).
+
+You can think of views as the **"brains"** of your app. They take in a request, process data (often from the database), and decide what to return.
+
+---
+
+### 🧠 Example Breakdown
+
+```python
+# views.py
+from django.http import HttpResponse
+
+def home(request):
+    return HttpResponse("Hello, Mostafa!")
+```
+
+This view:
+
+- Accepts a request (`home(request)`)
+- Returns an HTTP response (just a plain string for now)
+
+---
+
+### 🛤 How Views Fit in the Flow
+
+1. **User visits** a URL in their browser
+2. Django checks the `urls.py` to match the URL to a view
+3. That **view function runs**, maybe fetching data from the database
+4. The view **returns a response**, often using a template
+
+---
+
+### 🏗 Types of Views
+
+- **Function-Based Views (FBV)** → simpler, what you're using now
+- **Class-Based Views (CBV)** → more powerful, reusable, and customizable (you'll learn these later)
+
+---
+
+here is our first view:
+
+```py
+from django.shortcuts import render
+from django.http import HttpResponse
+
+# Create your views here.
+
+
+def say_hello(request):
+    return HttpResponse("Hello World")
+
+```
+
+now we need to map this view to a url, so when we get a request to that url this function will be called.
