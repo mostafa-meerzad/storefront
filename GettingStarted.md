@@ -339,3 +339,150 @@ Now:
 - `/about/` → About page
 
 ---
+
+## Using Templates
+
+to use templates first crate `templates` directory inside your app
+then put your `html` files there "a template is just a HTML file that is rendered on a request"
+
+to render the template when user hits an endpoint we need to render it as follows:
+
+```py
+from django.shortcuts import render
+from django.http import HttpResponse
+# Create your views here.
+
+
+def say_hello(request):
+     return render(request, "hello.html")
+
+```
+
+we can also pass some data to our templates `render(request, "hello.html", {"name": "mostafa"})` the third argument takes a dictionary and it's keys are accessible in the template inside `{{}}` double curly braces `<h1>Hello {{name}}</h1>`
+
+---
+
+in other words
+
+Great question, Mostafa — and good on you for being curious even if the course is moving past templates. Let’s break it all down.
+
+---
+
+### 🎨 What Are Django Templates?
+
+Django templates are **HTML files** that can contain **special template tags** and **variables**.
+
+They're rendered by views to dynamically show data — like showing a list of products, user names, messages, etc.
+
+---
+
+### 🧠 Basic View-to-Template Flow
+
+```python
+# views.py
+from django.shortcuts import render
+
+def home(request):
+    return render(request, 'home.html', {'name': 'Mostafa'})
+```
+
+- `'home.html'` is the template file
+- `{'name': 'Mostafa'}` is the context dictionary (data passed to template)
+
+---
+
+### 🗂 Folder Structure
+
+Django expects templates to be inside a folder named `templates`.
+
+Example:
+
+```
+myapp/
+├── templates/
+│   └── home.html
+├── views.py
+```
+
+Or if you want to share templates across multiple apps:
+
+```
+project_root/
+├── templates/
+│   └── home.html
+```
+
+Then in your **`settings.py`**, make sure `DIRS` is set:
+
+```python
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / "templates"],  # Enable global template folder
+        ...
+    },
+]
+```
+
+---
+
+### 🧾 Example Template: `home.html`
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Django Site</title>
+  </head>
+  <body>
+    <h1>Hello, {{ name }}!</h1>
+  </body>
+</html>
+```
+
+Here:
+
+- `{{ name }}` will be replaced with `"Mostafa"` from the context.
+
+---
+
+### ➕ Passing More Data
+
+```python
+def about(request):
+    context = {
+        'developer': 'Mostafa Meerzad',
+        'skills': ['Python', 'Django', 'React']
+    }
+    return render(request, 'about.html', context)
+```
+
+```html
+<!-- about.html -->
+<h2>{{ developer }}</h2>
+<ul>
+  {% for skill in skills %}
+  <li>{{ skill }}</li>
+  {% endfor %}
+</ul>
+```
+
+---
+
+### 📌 So Why Does Mosh Say We Don't Use Templates Much Now?
+
+In **modern full-stack development**, Django often acts as a **backend API**, and we use something like:
+
+- **React**, **Vue**, or **Next.js** as the frontend
+- Django only returns **JSON**, not rendered HTML
+
+So you’ll focus more on **Django REST Framework** later in the course to build APIs.
+
+But if you ever build:
+
+- A blog
+- A company website
+- A dashboard for admin
+  Templates are still **super useful** — especially for internal tools or quick MVPs.
+
+---
