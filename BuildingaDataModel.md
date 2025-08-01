@@ -266,3 +266,159 @@ Would you like me to **draw a real-world example** with sample data (showing tab
 
 ## Creating Models
 
+Great! 🎉 This is one of the most important parts of Django—**creating models** is where you define your database structure in Python. Let’s break it down **step by step** so you fully understand what’s happening before we write code.
+
+---
+
+## 1️⃣ **What is a Model in Django?**
+
+A **model** is a Python class that represents a **database table**.
+Each **attribute** of the class = a **column** in the table.
+Each **instance** of the class = a **row** in the table.
+
+Django uses these models to automatically create tables in the database.
+
+---
+
+## 2️⃣ **Setup: Check Your App Structure**
+
+Before writing models, make sure:
+
+* You created a Django app (e.g., `store`, `blog`, etc.).
+* Your app is added to `INSTALLED_APPS` in `settings.py`.
+
+Example:
+
+```python
+INSTALLED_APPS = [
+    ...
+    'store',  # Add your app here
+]
+```
+
+---
+
+## 3️⃣ **Create Your First Model**
+
+Inside your app (e.g., `store/models.py`):
+
+```python
+from django.db import models
+
+class Product(models.Model):
+    title = models.CharField(max_length=255)   # Text field
+    description = models.TextField()          # Longer text
+    price = models.DecimalField(max_digits=6, decimal_places=2)  # Money
+    inventory = models.IntegerField()         # Number
+    last_update = models.DateTimeField(auto_now=True)  # Auto-updated timestamp
+```
+
+✅ Here’s what’s happening:
+
+* `models.Model` → makes it a Django model (table).
+* Each field (e.g., `CharField`, `DecimalField`) defines a **column** in the table.
+
+---
+
+## 4️⃣ **Run Migrations**
+
+Models don’t create database tables immediately.
+Django uses **migrations** to translate your models into SQL.
+
+### Steps:
+
+1. **Generate migration file:**
+
+   ```bash
+   python manage.py makemigrations
+   ```
+
+   Django analyzes your models and creates a migration script.
+
+2. **Apply migration (create tables):**
+
+   ```bash
+   python manage.py migrate
+   ```
+
+This actually creates the tables in your database.
+
+---
+
+## 5️⃣ **See SQL Behind It (Optional but Cool!)**
+
+You can see what SQL Django is running:
+
+```bash
+python manage.py sqlmigrate store 0001
+```
+
+(`0001` is your migration number.)
+
+---
+
+## 6️⃣ **Add Data (Django Shell)**
+
+Now test it by adding products:
+
+```bash
+python manage.py shell
+```
+
+```python
+from store.models import Product
+p = Product(title="Laptop", description="Gaming laptop", price=1500, inventory=10)
+p.save()  # Saves to DB
+```
+
+Or view all:
+
+```python
+Product.objects.all()
+```
+
+---
+
+## 7️⃣ **Relationships**
+
+If you need related tables:
+
+* **One-to-Many (ForeignKey):**
+
+  ```python
+  class Collection(models.Model):
+      title = models.CharField(max_length=255)
+
+  class Product(models.Model):
+      collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
+  ```
+
+* **Many-to-Many:**
+
+  ```python
+  class Promotion(models.Model):
+      description = models.CharField(max_length=255)
+      discount = models.FloatField()
+
+  class Product(models.Model):
+      promotions = models.ManyToManyField(Promotion)
+  ```
+
+* **One-to-One:**
+
+  ```python
+  class UserProfile(models.Model):
+      user = models.OneToOneField(User, on_delete=models.CASCADE)
+  ```
+
+---
+
+## 🔑 **Key Points to Remember**
+
+* Every time you change models → `makemigrations` then `migrate`.
+* Use `related_name` to control reverse relationships.
+* `on_delete` is required in `ForeignKey` and `OneToOne`.
+
+---
+
+Would you like me to **draw the ERD (diagram)** of Mosh’s e-commerce example (Products, Collections, Promotions, Carts, etc.) so you can visualize the relationships before coding?
