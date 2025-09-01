@@ -5,9 +5,17 @@ from django.db import models
 # Create your models here.
 
 
+class Promotion(models.Model):
+    description = models.CharField(max_length=255)
+    discount = models.FloatField()
+#   product_set
+
+
 class Collection(models.Model):
     title = models.CharField(max_length=255)
-
+    featured_product = models.ForeignKey(
+        'Product', on_delete=models.SET_NULL, null=True, related_name="+")
+# use strings for model names only when you have to, it wouldn't get the updates in the future when you rename it
 
 class Product(models.Model):
     title = models.CharField(max_length=255)
@@ -16,6 +24,9 @@ class Product(models.Model):
     inventory = models.IntegerField()
     last_update = models.DateTimeField(auto_now=True)
     product = models.ForeignKey(Collection, on_delete=models.PROTECT)
+    promotion = models.ManyToManyField(Promotion, related_name="products")
+    # related_name changes the default field-name for the relation field
+    # in the Promotion class, so now instead of default "product_set" we'd have "products"
 
 
 class Customer (models.Model):
@@ -63,8 +74,7 @@ class Address(models.Model):
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=255)
     customer = models.OneToOneField(
-        Customer, on_delete=models.SET_DEFAULT, primary_key=True)
-    address = models.ForeignKey(Customer, on_delete=models.CASCADE)
+        Customer, on_delete=models.CASCADE, primary_key=True)
 
 
 class Cart(models.Model):

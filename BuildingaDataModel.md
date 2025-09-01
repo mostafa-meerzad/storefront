@@ -519,3 +519,137 @@ customer.home_address
 
 Would you like me to **add visual diagrams** showing how these tables relate to each other (ERD style) and include some **sample queries** for forward & reverse lookups?
 That would make this review even more practical for you.
+
+## Many to Many relationship
+
+Alright, let's take this step-by-step and make sure it’s clear — because **many-to-many relationships in Django** are conceptually simple but have some powerful behavior behind the scenes. I’ll break it down with an example, explain what Django does internally, and show you how to use it in code.
+
+---
+
+## **1. What is a Many-to-Many Relationship?**
+
+- In real life:
+
+  - A **student** can enroll in many **courses**.
+  - A **course** can have many **students**.
+  - Neither is strictly the “parent”; they’re peers.
+- In databases:
+
+  - This is represented by a **junction table** (or “link table”) that stores pairs of IDs linking the two tables.
+
+---
+
+## **2. How Django Represents It**
+
+Django provides a special field type: `ManyToManyField`.
+When you use it, Django **automatically creates the junction table** unless you specify your own.
+
+Example:
+
+```python
+from django.db import models
+
+class Course(models.Model):
+    title = models.CharField(max_length=255)
+
+class Student(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    courses = models.ManyToManyField(Course)
+```
+
+---
+
+## **3. What Happens Internally?**
+
+- Django **does not add a column to `Student` or `Course` directly**.
+- Instead, it **creates an automatic third table** named `<appname>_student_courses` (or similar) containing:
+
+  - `id` (auto-generated primary key)
+  - `student_id` (foreign key to `Student`)
+  - `course_id` (foreign key to `Course`)
+
+So, adding a student to a course inserts a row in this junction table.
+
+---
+
+## **4. How to Use It**
+
+### Adding data
+
+```python
+math = Course.objects.create(title="Math")
+physics = Course.objects.create(title="Physics")
+
+john = Student.objects.create(first_name="John", last_name="Doe")
+jane = Student.objects.create(first_name="Jane", last_name="Smith")
+
+# Add courses to students
+john.courses.add(math, physics)
+jane.courses.add(math)
+```
+
+### Querying
+
+```python
+# Which courses is John enrolled in?
+john.courses.all()
+
+# Which students are in Math?
+math.student_set.all()   # reverse lookup automatically added
+```
+
+### Removing
+
+```python
+john.courses.remove(physics)  # deletes the link row in the junction table
+```
+
+### Setting or clearing all
+
+```python
+john.courses.set([math])   # replaces all courses with just Math
+john.courses.clear()       # removes all links
+```
+
+---
+
+## **5. Adding Extra Fields to the Relationship**
+
+Sometimes the relationship itself has data — e.g., *grade* or *date\_enrolled*.
+In that case, **you define your own junction table using `through=`**:
+
+```python
+class Enrollment(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    date_enrolled = models.DateField(auto_now_add=True)
+    grade = models.CharField(max_length=2, blank=True)
+
+class Student(models.Model):
+    first_name = models.CharField(max_length=255)
+    last_name = models.CharField(max_length=255)
+    courses = models.ManyToManyField(Course, through='Enrollment')
+```
+
+Now you can access `Enrollment` directly:
+
+```python
+# Enroll John manually with extra data
+Enrollment.objects.create(student=john, course=math, grade='A')
+
+# Or read them:
+for enrollment in john.enrollment_set.all():
+    print(enrollment.course.title, enrollment.grade)
+```
+
+---
+
+## **6. Key Takeaways**
+
+- **`ManyToManyField` automatically creates a junction table** unless you customize it with `through=`.
+- You can **add/remove/set** relationships using Django methods.
+- Reverse lookups are **automatic** using `<model>_set` unless you define `related_name`.
+- If the relationship itself has attributes, use a custom through-model.
+
+---
